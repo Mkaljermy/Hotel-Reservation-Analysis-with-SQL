@@ -1,0 +1,101 @@
+CREATE TABLE hotel_reservation
+(
+	Booking_ID VARCHAR,
+	no_of_adults INT,
+	no_of_children INT,
+	no_of_weekend_nights INT,
+	no_of_week_nights INT,
+	type_of_meal_plan VARCHAR,
+	room_type_reserved VARCHAR,
+	lead_time INT,
+	arrival_date DATE,
+	market_segment_type VARCHAR,
+	avg_price_per_room FLOAT, 
+	booking_status VARCHAR
+)
+
+-- load data into table using python
+
+SELECT * FROM hotel_reservation;
+
+----1----
+SELECT COUNT(*) AS total_reservations 
+FROM HOTEL_RESERVATION;
+
+----2----
+SELECT type_of_meal_plan, count(*) AS most_popular_meal_plan
+FROM HOTEL_RESERVATION
+GROUP BY(type_of_meal_plan)
+ORDER BY(most_popular_meal_plan) DESC;
+
+----3----
+SELECT AVG(AVG_PRICE_PER_ROOM) AS average_price_with_children
+FROM HOTEL_RESERVATION
+WHERE NO_OF_CHILDREN >0;
+
+----4----
+SELECT COUNT(*) AS reservations_in_2017
+FROM HOTEL_RESERVATION
+WHERE EXTRACT(YEAR FROM arrival_date::date) = 2017;
+
+----5----
+SELECT room_type_reserved, COUNT(*) AS most_booked_room_type
+FROM HOTEL_RESERVATION
+GROUP BY(room_type_reserved)
+ORDER BY(most_booked_room_type) DESC;
+
+----6----
+SELECT COUNT(*) AS reservations_in_weekend
+FROM HOTEL_RESERVATION
+WHERE no_of_weekend_nights > 0;
+
+----7----
+SELECT MAX(lead_time) AS highest_lead_time, MIN(lead_time) AS lowest_lead_time
+FROM HOTEL_RESERVATION;
+
+----8----
+SELECT market_segment_type, COUNT(*) AS most_common_market_segment_type
+FROM HOTEL_RESERVATION
+GROUP BY(market_segment_type)
+ORDER BY(most_common_market_segment_type) DESC;
+
+----9----
+SELECT COUNT(*) AS Confirmed_reservations
+FROM HOTEL_RESERVATION
+WHERE booking_status='Not_Canceled';
+
+----10----
+SELECT SUM(no_of_adults) AS total_adults_no, 
+SUM(no_of_children) AS total_children_no,
+SUM(no_of_adults + no_of_children) AS total_no_of_adults_and_children
+FROM HOTEL_RESERVATION;
+
+----11----
+SELECT AVG(no_of_weekend_nights)
+FROM HOTEL_RESERVATION
+WHERE no_of_children>0;
+
+----12----
+SELECT 
+    EXTRACT(MONTH FROM arrival_date::date) AS reservation_month,
+    COUNT(*) AS num_reservations
+FROM HOTEL_RESERVATION
+WHERE EXTRACT(YEAR FROM arrival_date::date) = 2017
+GROUP BY (reservation_month);
+
+----13----
+SELECT room_type_reserved, AVG(no_of_weekend_nights + no_of_week_nights) AS average_number_of_nights
+FROM HOTEL_RESERVATION
+GROUP BY(room_type_reserved);
+
+----14----
+SELECT MAX(room_type_reserved) AS common_rom_type, AVG(avg_price_per_room) AS avg_price
+FROM HOTEL_RESERVATION
+WHERE no_of_children > 0;
+
+----15----
+SELECT market_segment_type, MAX(avg_price_per_room) AS highest_average_price
+FROM HOTEL_RESERVATION
+GROUP BY(market_segment_type)
+ORDER BY highest_average_price DESC;
+
